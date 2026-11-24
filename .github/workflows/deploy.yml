@@ -1,0 +1,41 @@
+name: Deploy MOBITOK to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobitok-public-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'lamingsrb/mobitok-production' && github.ref == 'refs/heads/main' && vars.MOBITOK_VERCEL_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build production on GitHub Actions
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          MOBITOK_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.MOBITOK_PUBLIC_SUPABASE_ANON_KEY }}
+          VERCEL_TELEMETRY_DISABLED: '1'
+        run: python3 .github/scripts/release-vercel.py build
+      - name: Upload and verify the prebuilt Vercel deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          MOBITOK_AUTO_PROMOTE: ${{ vars.MOBITOK_VERCEL_AUTO_PROMOTE }}
+          VERCEL_TELEMETRY_DISABLED: '1'
+        run: python3 .github/scripts/release-vercel.py deploy

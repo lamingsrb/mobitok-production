@@ -1,0 +1,873 @@
+/* Shared color system. Scene animation lives in the separate cinematic home.
+   Keep the application root free of transforms/overflow so fixed shopping UI
+   continues to use the viewport. Only the isolated atmosphere layer moves. */
+/* Klijent je 22.09.2026. trazio belu pozadinu: preliv boja zamara oci.
+   Sve ostalo (zaglavlje, kartice, dugmad) ostaje isto. */
+html {
+  background: #ffffff;
+}
+body {
+  background: #ffffff;
+}
+.volt-universe {
+  --ink: #2b203d;
+  --muted: #5d466c;
+  --paper: #eae0f5;
+  --line: #d9cbe7;
+  --lime: #c5f4b5;
+  --volt-violet: #382052;
+  --volt-mint: #c5f4dc;
+  --volt-pink: #f4d8ed;
+  /* Visina kontakt trake i zaglavlja zajedno, odmak scene ispod njih. Pri skrolu nadole
+     se sklanjaju, a vracaju se pri skrolu nagore (feedback 02.11.2026,
+     useZaglavljeSeSklanja u storefront.tsx). */
+  --volt-header-height: 176px;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  color: var(--ink);
+}
+.volt-universe > .site-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+  background: #ffffff;
+}
+.volt-universe > .site-atmosphere::before {
+  content: none;
+}
+.volt-universe main {
+  background: transparent;
+}
+.volt-universe .contact-bar {
+  color: #dccfea;
+  background: linear-gradient(100deg, #2b163f, #251535 56%, #3b2047);
+  border-bottom: 1px solid #c9a9e01a;
+}
+.volt-universe .contact-bar-icon {
+  color: #c5f4b5;
+  background: #c5f4b517;
+  box-shadow: inset 0 0 0 1px #c5f4b52e;
+}
+.volt-universe .contact-bar-label {
+  color: #b7a3cd;
+}
+.volt-universe .contact-bar-item strong {
+  color: #ffffff;
+}
+.volt-universe a.contact-bar-item:hover strong,
+.volt-universe a.contact-bar-item:focus-visible strong {
+  color: #c5f4b5;
+}
+.volt-universe .status-dot,
+.volt-universe .tiny-lime {
+  background: #b5eebf;
+  box-shadow: 0 0 0 3px #b5eebf12;
+}
+.volt-universe .site-header {
+  color: #f2eafa;
+  background: rgba(43, 27, 62, 0.97);
+  border-bottom-color: #ad8dc335;
+  box-shadow: 0 8px 32px #301a3e0b;
+}
+.volt-universe[data-page="home"] .site-header {
+  background: rgba(23, 14, 39, 0.97);
+  border-bottom-color: #b89cdb27;
+  box-shadow: none;
+}
+.volt-universe .header-main,
+.volt-universe .desktop-nav {
+  color: #f2eafa;
+}
+.volt-universe .logo-o::after {
+  background: currentColor;
+}
+.volt-universe .logo-dot {
+  color: #b9efc6;
+}
+.volt-universe .header-search {
+  color: #c8b6df;
+  background: #cbb3e312;
+  border-color: #d6bced28;
+}
+.volt-universe .header-search:focus-within {
+  border-color: #b89bd073;
+  box-shadow: 0 0 0 3px #bb95e50a;
+}
+.volt-universe .header-search input {
+  color: #f6effe;
+  caret-color: #c5f4dc;
+}
+.volt-universe .header-search input::placeholder {
+  color: #c4b5d4;
+}
+.volt-universe .header-search kbd {
+  color: #c8b7dc;
+  background: #e4cff20d;
+  border-color: #dcc4ec24;
+}
+.volt-universe .all-categories {
+  border-color: #d8bce32c;
+}
+.volt-universe .count-dot {
+  color: #263925;
+  background: #c4efc8;
+}
+.volt-universe .header-cart {
+  color: #2b203d;
+  background: #c4efc8;
+  box-shadow: 0 6px 18px #0d051726;
+}
+.volt-universe .header-cart:hover {
+  background: #d4f6d6;
+  box-shadow: 0 8px 22px #0d051738;
+}
+.volt-universe .header-cart:focus-visible {
+  outline-color: #c4efc8;
+}
+.volt-universe .header-cart-icon {
+  color: #c4efc8;
+  background: #2b1b3e;
+}
+.volt-universe .header-cart b {
+  color: #2b203d;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px #2b1b3e;
+}
+.volt-universe .nav-wrap {
+  border-color: #d4b5e619;
+}
+.volt-universe .desktop-nav > a::after {
+  background: linear-gradient(90deg, #bca0f5, #b9eccf);
+}
+.volt-universe .nav-b2b {
+  color: #c4edcf;
+}
+.volt-universe .site-header .icon-button:hover,
+.volt-universe .all-categories.active {
+  color: #e8d8f6;
+  background: #d5b8ee12;
+}
+.volt-universe .category-panel,
+.volt-universe .category-flyout,
+.volt-universe .search-dropdown {
+  color: #342547;
+  background: linear-gradient(135deg, #eee5fa, #ebdfef 65%, #e0eee8);
+  border-color: #d3c1e4;
+  box-shadow: 0 24px 56px #24123735;
+}
+.volt-universe .category-panel-footer,
+.volt-universe .category-flyout-head,
+.volt-universe .menu-switches,
+.volt-universe .search-dropdown > a {
+  border-color: #d8c9e3;
+}
+.volt-universe .category-row:hover,
+.volt-universe .category-item.is-active .category-row,
+.volt-universe .category-item.is-active > .category-toggle {
+  color: #5b2f86;
+  background: #dccbeecc;
+}
+.volt-universe .site-header .category-panel :is(a, button):focus-visible {
+  outline-color: #7940a7;
+}
+/* U harmonici podkategorije stoje u istom okviru kao kategorije. Upit mora da
+   ostane isti kao u globals.css i storefront.tsx. */
+@media (max-width: 700px), (hover: none) {
+  .volt-universe .category-flyout {
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+}
+.volt-universe .search-dropdown small,
+.volt-universe .search-dropdown p {
+  color: #5d466c;
+}
+.volt-universe .search-dropdown .product-image {
+  mix-blend-mode: multiply;
+}
+.volt-universe .breadcrumb,
+.volt-universe .catalog-toolbar,
+.volt-universe .photo-caption {
+  color: #5d466c;
+}
+.volt-universe .breadcrumb a:hover {
+  color: #6e3b95;
+}
+.volt-universe .page-title h1,
+.volt-universe .guide-page-intro h1,
+.volt-universe .legal-page > h1 {
+  color: #382348;
+}
+.volt-universe .page-title .eyebrow,
+.volt-universe .section-heading .eyebrow {
+  color: #5d466c;
+}
+.volt-universe .device-finder {
+  background: linear-gradient(115deg, #e5d9f4 0%, #e8def2 48%, #d9eee5 100%);
+  border-color: #d2c1e2;
+  box-shadow: 0 12px 38px #5d36670b;
+}
+.volt-universe .finder-icon {
+  color: #6a488a;
+  background: #d6c8ea;
+}
+.volt-universe .finder-icon > span {
+  color: #305747;
+  border-color: #e1d8ed;
+  background: #bfeeda;
+}
+.volt-universe .finder-intro .eyebrow,
+.volt-universe .finder-form label > span {
+  color: #5d466c;
+}
+.volt-universe .finder-form b {
+  color: #675174;
+}
+.volt-universe .filter-mobile-button {
+  color: #654779;
+  background: #e7dbf4b3;
+  border-color: #d1bde0;
+}
+.volt-universe .catalog-filters {
+  border-color: #d4c4df;
+}
+.volt-universe .filter-title,
+.volt-universe .filter-group,
+.volt-universe .catalog-toolbar {
+  border-color: #d4c3df;
+}
+.volt-universe .filter-group > button,
+.volt-universe .filter-group .checkbox-label {
+  color: #5d466c;
+}
+.volt-universe .filter-group > button.filter-selected {
+  color: #64388d;
+}
+.volt-universe .filter-group > button > span {
+  color: #5d466c;
+}
+.volt-universe .active-filters button {
+  color: #65477c;
+  background: #dcccec;
+  border-color: #cdb8df;
+}
+.volt-universe input[type="checkbox"],
+.volt-universe input[type="range"] {
+  accent-color: #79559f;
+}
+.volt-universe .product-card {
+  color: #32253f;
+}
+.volt-universe .product-visual {
+  /* Klijent trazi bele kocke oko fotografija; prelivi ostaju na pozadini
+     sajta i na samoj kartici, ne iza artikla. */
+  background: #ffffff;
+  border-color: #e4dced;
+  box-shadow: inset 0 1px 0 #ffffff, 0 10px 25px #563f720b;
+}
+.volt-universe .product-image-link .product-image,
+.volt-universe .main-product-photo > img,
+.volt-universe .product-thumbs img,
+.volt-universe .cart-line > a .product-image,
+.volt-universe .checkout-product .product-image {
+  mix-blend-mode: multiply;
+}
+.volt-universe .product-brand,
+.volt-universe .price-caption {
+  color: #5d466c;
+}
+.volt-universe .product-bottom strong {
+  color: #432a58;
+}
+.volt-universe .product-tag {
+  color: #6d4b86;
+  background: #f0e6facf;
+  border: 0;
+}
+.volt-universe .favorite-button {
+  color: #876091;
+  background: #f2e5f4ed;
+}
+.volt-universe .favorite-button:hover,
+.volt-universe .favorite-button.is-favorite {
+  color: #36594a;
+  background: #beeacf;
+}
+.volt-universe .add-product {
+  color: #dfc5f1;
+  background: #49305e;
+  border-color: #49305e;
+}
+.volt-universe .add-product:hover {
+  color: #244a3b;
+  background: #bce7ce;
+  border-color: #a5d4bf;
+}
+.volt-universe .quick-view {
+  color: #5e3d77;
+  background: #eee2f8f5;
+  border-color: #d5c1e7;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.volt-universe .main-product-photo {
+  background: radial-gradient(ellipse at 75% 22%, #e5cef0 0%, transparent 64%), linear-gradient(140deg, #dcd0ed, #e5def1 55%, #d1e9df);
+  border-color: #cbb9df;
+  box-shadow: inset 0 1px 0 #faedff80, 0 22px 50px #62477c0c;
+}
+.volt-universe .product-thumbs button {
+  background: #dfd3ee;
+  border-color: #c8b6d9;
+}
+.volt-universe .product-thumbs button.active {
+  background: #d1e7dd;
+  border-color: #9880b4;
+}
+.volt-universe .detail-tag,
+.volt-universe .detail-price > span,
+.volt-universe .detail-notes,
+.volt-universe .business-nudge small {
+  color: #5d466c;
+}
+.volt-universe .detail-price,
+.volt-universe .business-nudge,
+.volt-universe .detail-tabs {
+  border-color: #d3c1df;
+}
+.volt-universe .detail-price > strong {
+  color: #4b3063;
+}
+.volt-universe .compatible-box {
+  color: #46695b;
+  background: linear-gradient(120deg, #d5ebdf, #e3e7ec);
+  border-color: #bfd8cc;
+}
+.volt-universe .compatible-box p {
+  color: #3f6050;
+}
+.volt-universe .quantity {
+  background: #e5d9f1;
+  border-color: #cdb9dd;
+}
+.volt-universe .quantity button:hover {
+  color: #61427b;
+  background: #d5c2e6;
+}
+.volt-universe .detail-tabs button {
+  color: #5d466c;
+}
+.volt-universe .detail-tabs button.active {
+  color: #5d377b;
+  border-color: #8356aa;
+}
+.volt-universe .spec-table > div:nth-child(odd) {
+  background: #e3d5ef9c;
+}
+.volt-universe .spec-table dt {
+  color: #7f658e;
+}
+.volt-universe .spec-table dd {
+  color: #4d335d;
+}
+.volt-universe .drawer-overlay {
+  background: #1c0d329c;
+}
+.volt-universe .cart-drawer {
+  color: #36243f;
+  background: linear-gradient(145deg, #eee2f6, #e4dbf1 66%, #dceddf);
+  box-shadow: -18px 0 60px #1d0c343b;
+}
+.volt-universe .drawer-heading,
+.volt-universe .cart-line {
+  border-color: #d6c3e3;
+}
+.volt-universe .drawer-summary {
+  background: #e7daef;
+  border-color: #d3bede;
+}
+.volt-universe .drawer-summary p,
+.volt-universe .view-cart-link {
+  color: #7b6289;
+}
+.volt-universe .cart-line > a {
+  background: linear-gradient(135deg, #ddcbe9, #d9e8df);
+  border-color: #cdb9da;
+}
+.volt-universe .cart-line-copy > strong {
+  color: #533566;
+}
+.volt-universe .cart-suggestion {
+  color: #445a50;
+  background: linear-gradient(110deg, #d0e9d9, #e2e7e3 65%, #e9d9ed);
+  border-color: #bdd7cc;
+}
+.volt-universe .cart-suggestion small,
+.volt-universe .cart-suggestion p {
+  color: #5b7165;
+}
+.volt-universe .cart-suggestion .product-image {
+  mix-blend-mode: multiply;
+}
+.volt-universe .order-summary {
+  color: #483254;
+  background: linear-gradient(150deg, #e3d3ef 0%, #e7daed 55%, #dce9e1 100%);
+  border-color: #cdb7dd;
+  box-shadow: 0 18px 48px #6041760c;
+}
+.volt-universe .order-summary > div > span:last-child,
+.volt-universe .order-summary > p,
+.volt-universe .summary-safe {
+  color: #5d466c;
+}
+/* Keep inherited olive helper text readable on the pastel purchase surfaces. */
+.volt-universe .field small,
+.volt-universe .checkout-product small {
+  color: #5d466c;
+}
+.volt-universe .summary-total,
+.volt-universe .checkout-product {
+  border-color: #cdb6dc;
+}
+.volt-universe .checkout-step > span {
+  color: #6b4287;
+  background: #dbcaeb;
+}
+.volt-universe .field,
+.volt-universe .finder-form label,
+.volt-universe .consent-label {
+  color: #624977;
+}
+.volt-universe .field input,
+.volt-universe .field select,
+.volt-universe .field textarea,
+.volt-universe .finder-form select,
+.volt-universe .filter-group select,
+.volt-universe .catalog-toolbar select,
+.volt-universe .account-panel .field {
+  color: #493256;
+  background: #eee5f5;
+  border-color: #cab5da;
+  caret-color: #664083;
+}
+.volt-universe .field input::placeholder,
+.volt-universe .field textarea::placeholder,
+.volt-universe .account-panel .field::placeholder {
+  color: #5d466c;
+}
+.volt-universe .field input:focus,
+.volt-universe .field select:focus,
+.volt-universe .field textarea:focus,
+.volt-universe .finder-form select:focus,
+.volt-universe .filter-group select:focus,
+.volt-universe .account-panel .field:focus {
+  border-color: #9470b2;
+  box-shadow: 0 0 0 3px #b597cf26;
+}
+.volt-universe .notice,
+.volt-universe .account-panel .account-notice {
+  color: #655176;
+  background: #e6d9ef;
+  border-color: #cab4dd;
+}
+.volt-universe .form-error,
+.volt-universe .account-panel .account-notice.is-error {
+  color: #8f405b;
+  background: #f3dce5;
+  border-color: #dfb2c5;
+}
+.volt-universe .demo-payment {
+  color: #4c6a5f;
+  background: #d5e9df;
+  border-color: #b7d6c8;
+}
+.volt-universe .demo-payment p {
+  color: #3f6050;
+}
+.volt-universe .demo-payment > span {
+  color: #355542;
+  background: #c2dfca;
+}
+.volt-universe .success-icon {
+  color: #487359;
+  background: linear-gradient(140deg, #caebd4, #dbcaf0);
+}
+.volt-universe .button-dark,
+.volt-universe .account-panel .button-dark {
+  color: #f1e8fa;
+  background: #48305e;
+  border-color: #48305e;
+  box-shadow: 0 5px 15px #46295813;
+}
+.volt-universe .button-dark:hover,
+.volt-universe .account-panel .button-dark:hover:not(:disabled) {
+  color: #f8efff;
+  background: #5b3977;
+  border-color: #5b3977;
+}
+.volt-universe .button-lime {
+  color: #2b4d3d;
+  background: #beeacb;
+  box-shadow: 0 5px 20px #83ab9126;
+}
+.volt-universe .button-lime:hover {
+  background: #c9f4d6;
+}
+.volt-universe .button-light {
+  color: #5c3778;
+  background: #e6d5f3;
+}
+.volt-universe .account-panel {
+  --account-ink: #3e2851;
+  --account-muted: #5d466c;
+  --account-lime: #c1e9d0;
+}
+.volt-universe .panel,
+.volt-universe .account-panel .panel {
+  background: linear-gradient(140deg, #eae0f4eb, #eee0eeeb 62%, #deebe3eb);
+  border-color: #cfbcdc;
+  box-shadow: 0 12px 42px #6e47700b;
+}
+.volt-universe .account-panel .button:not(.button-dark) {
+  color: #65437d;
+  background: #e4d4f0;
+  border-color: #cdb6dc;
+}
+.volt-universe .account-panel .button:not(.button-dark):hover:not(:disabled) {
+  background: #d8c5e9;
+}
+.volt-universe .account-panel .account-tabs {
+  background: #dccbe9;
+}
+.volt-universe .account-panel .account-tabs button {
+  color: #5d466c;
+}
+.volt-universe .account-panel .account-tabs button.is-active {
+  color: #5d3677;
+  background: #ede1f7;
+  box-shadow: 0 2px 8px #5837730c;
+}
+.volt-universe .account-panel .account-divider::before {
+  background: #d1bedd;
+}
+.volt-universe .account-panel .account-divider span {
+  color: #5d466c;
+  background: #eadff2;
+}
+.volt-universe .account-panel .account-icon,
+.volt-universe .account-panel .account-avatar,
+.volt-universe .account-panel .account-empty > span {
+  color: #825d9b;
+  background: #d9c9e9;
+}
+.volt-universe .account-panel .account-dot {
+  background: #ab86c4;
+}
+.volt-universe .account-panel .account-benefits {
+  color: #eee2f8;
+  background: radial-gradient(ellipse at 95% 0, #644077 0%, transparent 58%), linear-gradient(145deg, #2e173f, #261b3c 66%, #1d3b38);
+}
+.volt-universe .account-panel .account-benefits h2 {
+  color: #f0e6fa;
+}
+.volt-universe .account-panel .account-benefits > div > p,
+.volt-universe .account-panel .account-benefit p {
+  color: #bfa9cc;
+}
+.volt-universe .account-panel .account-benefit {
+  border-color: #cbaee122;
+}
+.volt-universe .account-panel .account-margin-check {
+  color: #eee2f8;
+  background:
+    radial-gradient(ellipse at 95% 0, #644077 0%, transparent 58%),
+    linear-gradient(145deg, #2e173f, #261b3c 66%, #1d3b38);
+}
+.volt-universe .account-panel .account-margin-check dt,
+.volt-universe .account-panel .account-margin-check small {
+  color: #bfa9cc;
+}
+.volt-universe .account-panel .account-margin-table {
+  background: #f4edf9b3;
+  border-color: #d6c3e3;
+}
+.volt-universe .account-panel .account-business-link {
+  color: #4c2b62;
+  background: linear-gradient(140deg, #d2bce9 0%, #ded0ec 48%, #bfe6d5 100%);
+}
+.volt-universe .account-panel .account-business-link:hover {
+  background: linear-gradient(140deg, #dbc6ef 0%, #e6d6ee 48%, #c9edda 100%);
+}
+.volt-universe .account-panel .account-business-link p {
+  color: #5d466c;
+}
+.volt-universe .account-panel .account-business-cta {
+  border-color: #9d7db72e;
+}
+.volt-universe .account-panel .account-business-aside {
+  color: #5d3a76;
+  background: linear-gradient(145deg, #deceed, #e9d8ea 54%, #d1e8dc);
+  border-color: #cbb2dc;
+}
+.volt-universe .account-panel .account-business-aside > p,
+.volt-universe .account-panel .account-business-aside li,
+.volt-universe .account-panel .account-aside-note {
+  color: #5d466c;
+}
+.volt-universe .account-panel .account-business-aside svg {
+  color: #8c69a4;
+}
+.volt-universe .account-panel .account-preview-note {
+  color: #5d466c;
+  background: #e1d4eb;
+}
+.volt-universe .account-panel .account-order,
+.volt-universe .account-panel .account-discount,
+.volt-universe .account-panel .account-application,
+.volt-universe .account-panel .account-admin-order,
+.volt-universe .account-panel .account-aside-note {
+  border-color: #d2bedf;
+}
+.volt-universe .account-panel .account-badge {
+  color: #5d466c;
+  background: #decee9;
+}
+.volt-universe .account-panel .account-badge.is-approved,
+.volt-universe .account-panel .account-badge.is-completed {
+  color: #355542;
+  background: #c5e3d0;
+}
+.volt-universe .account-panel .account-badge.is-pending,
+.volt-universe .account-panel .account-badge.is-reviewing {
+  color: #6a4c25;
+  background: #eedcbb;
+}
+.volt-universe .account-panel .account-badge.is-rejected,
+.volt-universe .account-panel .account-badge.is-cancelled {
+  color: #7c3e54;
+  background: #ebcbd9;
+}
+.volt-universe .account-panel .account-status-icon {
+  color: #8c62a8;
+  background: #deceec;
+}
+.volt-universe .account-panel .account-status-icon.is-approved {
+  color: #47735e;
+  background: #cbe6d4;
+}
+.volt-universe .account-panel .account-order span:not(.account-badge),
+.volt-universe .account-panel .account-order small,
+.volt-universe .account-panel .account-stats span,
+.volt-universe .account-panel .account-session span,
+.volt-universe .account-panel .account-application span:not(.account-badge),
+.volt-universe .account-panel .account-application small,
+.volt-universe .account-panel .account-admin-order-head span,
+.volt-universe .account-panel .account-admin-order li,
+.volt-universe .account-panel .account-small {
+  color: #5d466c;
+}
+.volt-universe .account-panel .account-security,
+.volt-universe .account-panel .account-logout,
+.volt-universe .account-panel .account-eye,
+.volt-universe .account-panel .account-text-button {
+  color: #5d466c;
+}
+.volt-universe .guide-page-icon,
+.volt-universe .guide-icon {
+  color: #8d65a4;
+  background: #ddcceb;
+}
+.volt-universe .quiz-panel {
+  color: #5b3872;
+  background: linear-gradient(140deg, #e5d5f0, #e9ddeb 60%, #d6e9df);
+  border-color: #cdb7dd;
+}
+.volt-universe .quiz-options > button,
+.volt-universe .budget-options button {
+  color: #765489;
+  background: #e5d6ef;
+  border-color: #cbb5da;
+}
+.volt-universe .quiz-options > button.selected {
+  color: #4e6c5d;
+  background: #c8e6d4;
+  border-color: #a4cab7;
+}
+.volt-universe .budget-options button.selected {
+  color: #f3e7fa;
+  background: #64447b;
+  border-color: #64447b;
+}
+.volt-universe .about-hero {
+  color: #452856;
+  background: linear-gradient(125deg, #dec8ef 0%, #eed9eb 48%, #cde8dc 100%);
+  border-color: #cbb2df;
+}
+.volt-universe .about-hero h1 > span {
+  color: #9060ac;
+}
+.volt-universe .about-hero p {
+  color: #5d466c;
+}
+.volt-universe .about-values > div,
+.volt-universe .faq-list details {
+  border-color: #d2bbde;
+}
+.volt-universe .faq-list details[open] {
+  background: linear-gradient(90deg, #e7d7ef66, transparent);
+}
+.volt-universe .empty-state > svg,
+.volt-universe .page-loading {
+  color: #9b77b2;
+}
+.volt-universe .site-footer {
+  color: #e8d8f5;
+  background: radial-gradient(ellipse at 96% 0%, #48225b 0%, transparent 60%), linear-gradient(135deg, #22122f, #211632 55%, #162f2b);
+  border-top-color: #cbb0dc29;
+}
+.volt-universe .footer-main h3 {
+  color: #eddff5;
+}
+.volt-universe .footer-brand p,
+.volt-universe .footer-main > div:not(.footer-brand) > a,
+.volt-universe .footer-note {
+  color: #b7a0c7;
+}
+.volt-universe .footer-main > div > a:hover,
+.volt-universe .footer-bottom a:hover {
+  color: #c6eace;
+}
+.volt-universe .footer-bottom,
+.volt-universe .footer-brand {
+  border-color: #b899ca23;
+}
+.volt-universe .footer-bottom {
+  color: #ad92c0;
+}
+.volt-universe .footer-note .status-dot {
+  background: #a3d9b6;
+}
+.volt-universe .toast {
+  color: #f0e2fa;
+  background: #3b2253;
+  border-color: #a580be3b;
+  box-shadow: 0 12px 36px #25103236;
+}
+.volt-universe .toast svg {
+  color: #b9e9c6;
+}
+.volt-universe :is(button, a, input, select, textarea, summary):focus-visible {
+  outline-color: #9b7bc3;
+}
+.volt-universe .site-header :is(button, a, input):focus-visible,
+.volt-universe .site-footer a:focus-visible,
+.volt-universe .mobile-nav :is(a, button):focus-visible {
+  outline-color: #bfe7c8;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .volt-universe .site-header {
+    background: rgba(40, 25, 57, 0.93);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .volt-universe[data-page="home"] .site-header {
+    background: rgba(22, 13, 38, 0.93);
+  }
+}
+@media (max-width: 950px) {
+  .volt-universe { --volt-header-height: 166px; }
+}
+@media (max-width: 700px) {
+  .volt-universe { --volt-header-height: 141px; }
+  .volt-universe .site-header {
+    background: #2c1b3ff7;
+    border-bottom-color: #b592cd27;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .volt-universe[data-page="home"] .site-header {
+    background: #190f2bf7;
+  }
+  .volt-universe .mobile-nav {
+    color: #d9c5e8;
+    background: #281838fa;
+    border-top-color: #b78ccb33;
+    box-shadow: 0 -8px 26px #2b154616;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .volt-universe .mobile-nav > a,
+  .volt-universe .mobile-nav > button {
+    min-height: 44px;
+    color: #ba9ccc;
+  }
+  .volt-universe .mobile-nav .active {
+    color: #c5efce;
+  }
+  .volt-universe .mobile-nav .active::before {
+    background: #c5efce16;
+  }
+  .volt-universe .mobile-nav i {
+    color: #274c37;
+    background: #c0e8cb;
+  }
+  .volt-universe .catalog-filters.filters-open {
+    color: #523460;
+    background: linear-gradient(160deg, #e8d9f1, #e6d9ea 60%, #d5e6db);
+    box-shadow: -100px 0 0 100vw #21113499;
+  }
+  .volt-universe > .site-atmosphere::before {
+    animation-duration: 60s;
+  }
+}
+@media (pointer: coarse) {
+  .volt-universe .account-panel .field,
+  .volt-universe .field input,
+  .volt-universe .field select,
+  .volt-universe .field textarea,
+  .volt-universe .header-search input,
+  .volt-universe .finder-form select,
+  .volt-universe .filter-group select,
+  .volt-universe .catalog-toolbar select {
+    font-size: 16px;
+  }
+}
+html[data-motion="paused"] .volt-universe > .site-atmosphere::before {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .volt-universe > .site-atmosphere::before {
+    animation: none !important;
+    transform: none;
+    will-change: auto;
+  }
+  .volt-universe .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+/* Naziv na kartici: ceo, podebljan i manjeg fonta (feedback 20.10.2026, video 49). */
+.volt-universe .product-card .product-copy .product-name {
+  display: block;
+  min-height: 0;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: unset;
+  font-size: 13.5px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+@media (max-width: 700px) {
+  .volt-universe .product-card .product-copy .product-name {
+    font-size: 12px;
+  }
+}
+/* Prikaz u listi ima više mesta, pa je naziv malo veći (kao grid-list u globals.css). */
+@media (min-width: 1100px) {
+  .volt-universe .catalogue-grid.grid-list .product-card .product-copy .product-name {
+    font-size: 14px;
+  }
+}

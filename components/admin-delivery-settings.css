@@ -1,0 +1,160 @@
+.admin-checkout {
+  display: grid;
+  min-width: 0;
+  gap: 18px;
+  margin-top: 20px;
+  color: #38234c;
+}
+.admin-checkout-heading h2 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 3vw, 31px);
+  letter-spacing: -.035em;
+}
+.admin-checkout-heading p,
+.admin-delivery-header p {
+  margin: 0;
+  color: #5d506a;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.admin-delivery {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 30px);
+  scroll-margin-top: 24px;
+  border: 1px solid #e6ddef;
+  border-radius: 20px;
+  background: #fff;
+}
+.admin-delivery-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.admin-delivery-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #eee6f7;
+  color: #613e82;
+}
+.admin-delivery h3 {
+  margin: 0 0 4px;
+  color: #38234c;
+  font-size: 19px;
+  letter-spacing: -.015em;
+}
+.admin-delivery-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  border: 0;
+}
+.admin-delivery-fields > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+}
+.admin-delivery-fields label {
+  color: #49335a;
+  font-size: 13px;
+  font-weight: 600;
+}
+.admin-delivery-fields input {
+  width: 100%;
+  min-height: 46px;
+  min-width: 0;
+  border: 1px solid #d8cce4;
+  border-radius: 11px;
+  padding: 10px 12px;
+  background: #fbf8fe;
+  color: #38234c;
+  font: inherit;
+  font-size: 16px;
+}
+.admin-delivery-fields input::placeholder {
+  color: #746783;
+  font-size: 14px;
+}
+.admin-delivery-fields small {
+  color: #62556f;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-delivery-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px 16px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid #ebe2f3;
+  border-radius: 12px;
+  background: #f7f2fb;
+}
+.admin-delivery-preview strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.admin-delivery-preview p {
+  margin: 0;
+  color: #5d506a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.admin-delivery-preview a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #613e82;
+  font-size: 13px;
+  font-weight: 600;
+}
+.admin-delivery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+.admin-delivery-actions .button {
+  min-height: 44px;
+  padding: 11px 17px;
+  gap: 8px;
+  border-radius: 10px;
+}
+.admin-delivery-actions .button-dark {
+  background: #482d62;
+  color: #fff;
+}
+.admin-delivery-discard {
+  border: 1px solid #d8cce4;
+  background: #fff;
+  color: #5d4570;
+}
+.admin-delivery-feedback {
+  border-radius: 10px;
+  margin: 13px 0 0;
+  padding: 11px 13px;
+  background: #eaf4e9;
+  color: #2b5834;
+  font-size: 13px;
+}
+.admin-delivery-feedback.is-error { background: #fbeef2; color: #8a2c47; }
+.admin-delivery :is(input, button, a):focus-visible {
+  outline: 2px solid #794ca4;
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .admin-delivery-fields { grid-template-columns: 1fr; gap: 14px; }
+  .admin-delivery-actions .button { flex: 1 1 130px; justify-content: center; }
+}

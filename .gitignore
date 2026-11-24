@@ -1,0 +1,40 @@
+# Local environment and credentials
+.env*
+.node_modules/
+node_modules/
+.vercel/
+.next/
+out/
+dist/
+.secrets/
+secrets/
+.credentials/
+credentials/
+credentials.json
+credentials.local.*
+auth.json
+.npmrc
+.netrc
+*.key
+*.pem
+*.p12
+*.pfx
+*.ppk
+*.jks
+*.keystore
+
+# Local material and test output
+Feedback_loop/
+Hosting_Setup/
+Karticno placanje - Riphaisen/
+.mc_uploads/
+.claude/
+.shots/
+qa/
+playwright-report/
+test-results/
+__pycache__/
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db

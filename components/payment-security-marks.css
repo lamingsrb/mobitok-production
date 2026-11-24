@@ -1,0 +1,7 @@
+.payment-security-marks{display:grid;gap:18px;margin:22px 0 0;color:var(--muted,#6f6874)}.payment-acceptance-marks{display:flex;align-items:center;max-width:420px;padding:14px 18px;border:1px solid #eee9f0;border-radius:12px;background:#fff}.payment-acceptance-marks img{display:block;width:100%;height:auto;object-fit:contain}.payment-authentication-marks{display:flex;align-items:center;gap:26px;min-height:44px;padding:0 10px}.payment-authentication-marks img{display:block;max-width:210px;height:60px;width:auto;object-fit:contain}.payment-security-marks p{font-size:11px;line-height:1.6;margin:0;max-width:440px}.payment-security-marks.is-compact{gap:12px;max-width:360px}.payment-security-marks.is-compact .payment-acceptance-marks{padding:12px}.payment-security-marks.is-compact .payment-authentication-marks img{height:60px}@media(max-width:480px){.payment-security-marks{gap:16px}.payment-acceptance-marks{padding:12px}.payment-authentication-marks{gap:24px}}
+
+.payment-authentication-marks a{display:inline-flex;align-items:center;min-width:60px}.payment-security-marks a:focus-visible{outline:2px solid #806592;outline-offset:5px;border-radius:4px}
+
+.payment-security-marks.is-compact .payment-authentication-marks{flex-wrap:wrap;padding:12px;border:1px solid #eee9f0;border-radius:12px;background:#fff}
+
+.payment-authentication-marks{flex-wrap:wrap}

@@ -1,0 +1,1018 @@
+/* Admin 03.11: alat Katalog u admin centru. Sve klase imaju prefiks .cat-; boje prate account-panel (svetla tema i volt-universe). */
+
+.account-panel .cat-panel {
+  --cat-line: #e6e9e0;
+  --cat-soft: #f7f8f3;
+  --cat-soft-2: #edf0e7;
+  --cat-surface: #fff;
+  --cat-accent: #8eab31;
+  --cat-check: #4f6a12;
+  --cat-ok-ink: #485629;
+  --cat-ok-soft: #f3f8e5;
+  --cat-ok-line: #dce7b6;
+  --cat-info-ink: #3f5260;
+  --cat-info-soft: #f1f5f7;
+  --cat-info-line: #d5e0e6;
+  --cat-warn-ink: #6f5310;
+  --cat-warn-soft: #fff8e5;
+  --cat-warn-line: #efdfb0;
+  --cat-danger: #b3261e;
+  --cat-danger-hover: #8f1d17;
+  --cat-danger-ink: #944427;
+  --cat-danger-soft: #fff3ef;
+  --cat-danger-line: #f0d7cb;
+  min-width: 0;
+}
+.volt-universe .account-panel .cat-panel {
+  --cat-line: #d8c6e5;
+  --cat-soft: #f3ecf8;
+  --cat-soft-2: #e8dcf1;
+  --cat-surface: #faf6fd;
+  --cat-accent: #9470b2;
+  --cat-check: #664083;
+  --cat-ok-ink: #655176;
+  --cat-ok-soft: #e6d9ef;
+  --cat-ok-line: #cab4dd;
+  --cat-info-ink: #5d466c;
+  --cat-info-soft: #eee5f5;
+  --cat-info-line: #cab5da;
+  --cat-warn-ink: #6d4c1c;
+  --cat-warn-soft: #f7ecdc;
+  --cat-warn-line: #e4cfa8;
+  --cat-danger: #9b2f55;
+  --cat-danger-hover: #7d2344;
+  --cat-danger-ink: #8f405b;
+  --cat-danger-soft: #f3dce5;
+  --cat-danger-line: #dfb2c5;
+}
+
+.account-panel .cat-panel > .cat-banner,
+.account-panel .cat-panel > .cat-pending {
+  margin: 0 0 12px;
+}
+
+/* Dugmad i polja */
+.account-panel .cat-panel button:disabled {
+  cursor: not-allowed;
+}
+.account-panel .cat-panel .button.cat-small {
+  min-height: 44px;
+  padding: 8px 12px;
+  gap: 6px;
+  font-size: 12px;
+  border-radius: 9px;
+}
+.account-panel .cat-panel .button.cat-button-danger:not(.button-dark) {
+  background: var(--cat-danger);
+  border-color: var(--cat-danger);
+  color: #fff;
+}
+.account-panel .cat-panel .button.cat-button-danger:not(.button-dark):hover:not(:disabled) {
+  background: var(--cat-danger-hover);
+  border-color: var(--cat-danger-hover);
+  color: #fff;
+}
+.account-panel .cat-panel .cat-push {
+  margin-left: auto;
+}
+.account-panel .cat-panel .cat-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--account-muted);
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.account-panel .cat-panel .cat-icon-button:hover:not(:disabled) {
+  background: var(--cat-soft-2);
+  color: var(--account-ink);
+}
+.account-panel .cat-panel textarea {
+  font: inherit;
+}
+.account-panel .cat-panel textarea.field {
+  height: auto;
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.55;
+}
+.account-panel .cat-panel input[type="search"].field {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.account-panel .cat-panel input[type="checkbox"] {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--cat-check);
+  cursor: pointer;
+}
+.account-panel .cat-panel input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+.account-panel .cat-panel .cat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.account-panel .cat-panel .cat-form {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-field > label,
+.account-panel .cat-panel .cat-search > label {
+  font-size: 13px;
+  font-weight: 650;
+}
+.account-panel .cat-panel .cat-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.account-panel .cat-panel .cat-inline-form,
+.account-panel .cat-panel .cat-node-form {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--cat-line);
+  border-radius: 10px;
+  background: var(--cat-soft);
+}
+.account-panel .cat-panel .cat-lead {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-help {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--account-muted);
+}
+.account-panel .cat-panel .cat-error {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--cat-danger-ink);
+}
+.account-panel .cat-panel .cat-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.account-panel .cat-panel .cat-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Poruke i stanja */
+.account-panel .cat-panel .cat-banner {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--cat-info-line);
+  border-radius: 10px;
+  background: var(--cat-info-soft);
+  color: var(--cat-info-ink);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.account-panel .cat-panel .cat-banner.is-success {
+  border-color: var(--cat-ok-line);
+  background: var(--cat-ok-soft);
+  color: var(--cat-ok-ink);
+}
+.account-panel .cat-panel .cat-banner.is-warning {
+  border-color: var(--cat-warn-line);
+  background: var(--cat-warn-soft);
+  color: var(--cat-warn-ink);
+}
+.account-panel .cat-panel .cat-banner.is-error {
+  border-color: var(--cat-danger-line);
+  background: var(--cat-danger-soft);
+  color: var(--cat-danger-ink);
+}
+.account-panel .cat-panel .cat-banner-icon {
+  margin-top: 2px;
+}
+.account-panel .cat-panel .cat-banner-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-banner-text p {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-banner-text p + p {
+  margin-top: 4px;
+}
+.account-panel .cat-panel .cat-banner-actions {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.account-panel .cat-panel .cat-pending {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--cat-info-line);
+  border-radius: 12px;
+  background: var(--cat-info-soft);
+  color: var(--cat-info-ink);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.account-panel .cat-panel .cat-pending > svg {
+  flex: none;
+  margin-top: 2px;
+}
+.account-panel .cat-panel .cat-pending p {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 120px;
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-spin {
+  animation: cat-spin 1s linear infinite;
+}
+@keyframes cat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.account-panel .cat-panel .cat-empty {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px dashed var(--cat-line);
+  border-radius: 12px;
+  color: var(--account-muted);
+  font-size: 14px;
+}
+.account-panel .cat-panel .cat-empty p {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-samples {
+  padding: 10px 14px;
+  border: 1px solid var(--cat-line);
+  border-radius: 10px;
+  background: var(--cat-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.account-panel .cat-panel .cat-samples p {
+  margin: 0 0 4px;
+  font-weight: 650;
+}
+.account-panel .cat-panel .cat-samples ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: 18px;
+}
+.account-panel .cat-panel .cat-samples li {
+  overflow-wrap: anywhere;
+}
+
+/* Pogledi */
+.account-panel .cat-panel .cat-views {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 480px;
+  margin: 0 0 18px;
+}
+.account-panel .cat-panel .cat-views .button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 8px;
+  gap: 6px;
+}
+
+/* Proizvodi */
+.account-panel .cat-panel .cat-products {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-products.is-wide {
+  grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
+  align-items: start;
+}
+.account-panel .cat-panel .cat-main,
+.account-panel .cat-panel .cat-product-list {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-product-list {
+  scroll-margin-top: 12px;
+}
+.account-panel .cat-panel .cat-tree-wrap {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 8px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--cat-line);
+  border-radius: 14px;
+  background: var(--cat-soft);
+}
+.account-panel .cat-panel .cat-tree,
+.account-panel .cat-panel .cat-tree ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.account-panel .cat-panel .cat-tree-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--account-ink);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.account-panel .cat-panel .cat-tree-item > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-tree-item.is-sub {
+  padding-left: 24px;
+  font-size: 12.5px;
+}
+.account-panel .cat-panel .cat-tree-item:hover {
+  background: var(--cat-soft-2);
+}
+.account-panel .cat-panel .cat-tree-item.is-current {
+  background: var(--cat-surface);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--cat-accent);
+}
+.account-panel .cat-panel .cat-count {
+  flex: none;
+  color: var(--account-muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.account-panel .cat-panel .cat-search {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-search-row {
+  display: flex;
+  gap: 8px;
+}
+.account-panel .cat-panel .cat-search-row .field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-search-row .button {
+  flex: none;
+}
+.account-panel .cat-panel .cat-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+  align-items: end;
+  gap: 12px;
+}
+.account-panel .cat-panel .cat-more {
+  border: 1px solid var(--cat-line);
+  border-radius: 12px;
+  background: var(--cat-soft);
+}
+.account-panel .cat-panel .cat-more > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.account-panel .cat-panel .cat-more[open] > summary {
+  border-bottom: 1px solid var(--cat-line);
+}
+.account-panel .cat-panel .cat-more > .cat-filters {
+  padding: 12px 14px 8px;
+}
+.account-panel .cat-panel .cat-list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+.account-panel .cat-panel .cat-total {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+}
+.account-panel .cat-panel .cat-selectbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--cat-ok-line);
+  border-radius: 10px;
+  background: var(--cat-ok-soft);
+  color: var(--cat-ok-ink);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-selectbar p {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-cards {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity 0.18s;
+}
+.account-panel .cat-panel .cat-cards.is-loading {
+  opacity: 0.55;
+}
+.account-panel .cat-panel .cat-card {
+  display: grid;
+  grid-template-columns: 44px 48px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px 8px 2px;
+  border: 1px solid var(--cat-line);
+  border-radius: 12px;
+  background: var(--cat-surface);
+}
+.account-panel .cat-panel .cat-card.is-selected {
+  border-color: var(--cat-accent);
+  box-shadow: inset 0 0 0 1px var(--cat-accent);
+}
+.account-panel .cat-panel .cat-card-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+.account-panel .cat-panel .cat-thumb {
+  display: block;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--cat-line);
+  border-radius: 8px;
+  background: #fff;
+  object-fit: contain;
+}
+.account-panel .cat-panel .cat-thumb.is-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cat-soft);
+  color: var(--account-muted);
+}
+.account-panel .cat-panel .cat-card-body {
+  display: grid;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-card-name {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--account-ink);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.account-panel .cat-panel .cat-card-name:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.account-panel .cat-panel .cat-card-meta {
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 0;
+}
+.account-panel .cat-panel .cat-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid var(--cat-line);
+  border-radius: 999px;
+  background: var(--cat-soft-2);
+  color: var(--cat-info-ink);   /* Admin 03.11 (E5): kontrast na svetloj pozadini */
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.account-panel .cat-panel .cat-badge.is-edited {
+  border-color: var(--cat-ok-line);
+  background: var(--cat-ok-soft);
+  color: var(--cat-ok-ink);
+}
+.account-panel .cat-panel .cat-badge.is-danger {
+  border-color: var(--cat-danger-line);
+  background: var(--cat-danger-soft);
+  color: var(--cat-danger-ink);
+}
+.account-panel .cat-panel .cat-pager {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.account-panel .cat-panel .cat-pager > span {
+  color: var(--account-muted);
+  font-size: 12px;
+  text-align: center;
+}
+.account-panel .cat-panel .cat-pager .button {
+  padding: 10px 12px;
+  gap: 6px;
+}
+.account-panel .cat-panel .cat-actionbar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cat-line);
+  border-radius: 14px;
+  background: var(--cat-surface);
+  box-shadow: 0 10px 28px #1a20121f;
+}
+.account-panel .cat-panel .cat-actionbar-count {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Prozor (dialog) */
+.account-panel .cat-panel .cat-dialog {
+  width: min(560px, calc(100% - 32px));
+  max-width: calc(100% - 32px);
+  max-height: calc(100% - 32px);
+  padding: 0;
+  border: 1px solid var(--cat-line);
+  border-radius: 16px;
+  background: var(--cat-surface);
+  color: var(--account-ink);
+  box-shadow: 0 24px 64px #1a20122e;
+  overflow: hidden;
+}
+.account-panel .cat-panel .cat-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.account-panel .cat-panel .cat-dialog::backdrop {
+  background: #11150c73;
+}
+.volt-universe .account-panel .cat-panel .cat-dialog::backdrop {
+  background: #2b1a3b73;
+}
+.account-panel .cat-panel .cat-dialog.is-wide {
+  width: min(640px, 100%);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0 0 0 auto;
+  border-width: 0 0 0 1px;
+  border-radius: 0;
+}
+.account-panel .cat-panel .cat-dialog-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px 12px 20px;
+  border-bottom: 1px solid var(--cat-line);
+}
+.account-panel .cat-panel .cat-dialog-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 20px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* Posao i napredak */
+.account-panel .cat-panel .cat-job {
+  display: grid;
+  gap: 14px;
+}
+.account-panel .cat-panel .cat-job:focus {
+  outline: none;
+}
+.account-panel .cat-panel .cat-progress {
+  height: 12px;
+  border: 1px solid var(--cat-line);
+  border-radius: 999px;
+  background: var(--cat-soft-2);
+  overflow: hidden;
+}
+.account-panel .cat-panel .cat-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cat-accent);
+  transition: width 0.3s ease;
+}
+.account-panel .cat-panel .cat-progress-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.account-panel .cat-panel .cat-done {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--cat-ok-line);
+  border-radius: 12px;
+  background: var(--cat-ok-soft);
+  color: var(--cat-ok-ink);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.account-panel .cat-panel .cat-done > svg {
+  flex: none;
+  margin-top: 2px;
+}
+.account-panel .cat-panel .cat-done p {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-done p:first-child {
+  font-weight: 700;
+}
+
+/* Uredjivanje proizvoda */
+.account-panel .cat-panel .cat-editor-meta {
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-override {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 8px 10px;
+  border: 1px dashed var(--cat-line);
+  border-radius: 10px;
+  background: var(--cat-soft);
+  font-size: 12.5px;
+}
+.account-panel .cat-panel .cat-override p {
+  flex: 1 1 160px;
+  min-width: 0;
+  margin: 0;
+  color: var(--account-muted);
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-preview {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--cat-line);
+  border-radius: 12px;
+  background: var(--cat-soft);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-preview h3 {
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.account-panel .cat-panel .cat-preview p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-preview-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--cat-line);
+  border-radius: 10px;
+  background: var(--cat-surface);
+}
+.account-panel .cat-panel .cat-preview-card > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-preview-card strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-preview-card > div > span {
+  color: var(--account-muted);
+  font-size: 12px;
+}
+.account-panel .cat-panel .cat-preview-text {
+  color: var(--account-muted);
+  line-height: 1.6;
+}
+.account-panel .cat-panel .cat-link {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--account-ink);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Grupe */
+.account-panel .cat-panel .cat-groups,
+.account-panel .cat-panel .cat-history-wrap {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-groups > .account-hint,
+.account-panel .cat-panel .cat-history-wrap > .account-hint {
+  margin: 0;
+}
+.account-panel .cat-panel .cat-group-list,
+.account-panel .cat-panel .cat-sub-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.account-panel .cat-panel .cat-group-list {
+  display: grid;
+  gap: 10px;
+}
+.account-panel .cat-panel .cat-group {
+  padding: 4px 12px 12px;
+  border: 1px solid var(--cat-line);
+  border-radius: 14px;
+  background: var(--cat-surface);
+}
+.account-panel .cat-panel .cat-sub-list {
+  display: grid;
+  margin: 2px 0 8px;
+  padding-left: 14px;
+  border-left: 2px solid var(--cat-soft-2);
+}
+.account-panel .cat-panel .cat-node {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0;
+}
+.account-panel .cat-panel .cat-sub-list > li + li > .cat-node {
+  border-top: 1px solid var(--cat-line);
+}
+.account-panel .cat-panel .cat-node-main {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-node-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-node.is-hidden .cat-node-name {
+  color: var(--account-muted);
+}
+.account-panel .cat-panel .cat-node-meta {
+  margin: 2px 0 0;
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-node-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.account-panel .cat-panel .cat-node > .cat-note,
+.account-panel .cat-panel .cat-node > .cat-confirm,
+.account-panel .cat-panel .cat-node > .cat-node-form {
+  flex: 1 1 100%;
+}
+.account-panel .cat-panel .cat-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--cat-warn-line);
+  border-radius: 10px;
+  background: var(--cat-warn-soft);
+  color: var(--cat-warn-ink);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-confirm {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--cat-danger-line);
+  border-radius: 10px;
+  background: var(--cat-danger-soft);
+}
+.account-panel .cat-panel .cat-confirm p {
+  margin: 0;
+  color: var(--cat-danger-ink);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-add-sub {
+  margin-top: 4px;
+}
+
+/* Istorija */
+.account-panel .cat-panel .cat-history {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.account-panel .cat-panel .cat-history-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--cat-line);
+  border-radius: 12px;
+  background: var(--cat-surface);
+  font-size: 13px;
+}
+.account-panel .cat-panel .cat-history-item > div {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.account-panel .cat-panel .cat-history-item p {
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.account-panel .cat-panel .cat-history-status {
+  color: var(--account-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  .account-panel .cat-panel.account-admin-section {
+    padding: 16px;
+  }
+  .account-panel .cat-panel .cat-dialog-head {
+    padding: 8px 8px 8px 16px;
+  }
+  .account-panel .cat-panel .cat-dialog-body {
+    padding: 16px;
+  }
+  .account-panel .cat-panel .cat-dialog.is-wide {
+    border-width: 0;
+  }
+  .account-panel .cat-panel .cat-search-row .button {
+    padding: 12px 14px;
+  }
+}
+@media (max-width: 520px) {
+  .account-panel .cat-panel .cat-field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .account-panel .cat-panel .cat-views .button {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+  .account-panel .cat-panel .cat-actionbar .cat-actions .button {
+    flex: 1 1 auto;
+  }
+}
+@media (max-width: 374px) {
+  /* Admin 03.11: na uskom ekranu naziv otvara uredjivanje, olovka se skriva da naziv ima mesta. */
+  .account-panel .cat-panel .cat-card {
+    grid-template-columns: 44px 48px minmax(0, 1fr);
+    padding-right: 10px;
+  }
+  .account-panel .cat-panel .cat-card > .cat-icon-button {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-panel .cat-panel .cat-spin {
+    animation-duration: 2s;
+  }
+  .account-panel .cat-panel .cat-progress > span,
+  .account-panel .cat-panel .cat-cards,
+  .account-panel .cat-panel .cat-tree-item,
+  .account-panel .cat-panel .cat-icon-button {
+    transition: none;
+  }
+}
+
+/* Multi-model selection: touch targets, visible checkboxes and long device names. */
+.account-panel .cat-panel .cat-model-picker { min-width: 0; margin: 0; padding: 14px; border: 1px solid var(--cat-line); border-radius: 12px; }
+.account-panel .cat-panel .cat-model-picker legend { padding: 0 6px; font-weight: 650; }
+.account-panel .cat-panel .cat-model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); gap: 10px; max-height: min(55vh, 480px); overflow-y: auto; overscroll-behavior: contain; padding: 4px; }
+.account-panel .cat-panel .cat-model-tile { display: flex; align-items: center; gap: 10px; min-height: 64px; min-width: 0; padding: 12px; border: 1px solid var(--cat-line); border-radius: 10px; background: var(--cat-surface); cursor: pointer; }
+.account-panel .cat-panel .cat-model-tile input { flex: 0 0 18px; width: 18px; height: 18px; margin: 0; accent-color: var(--cat-check); }
+.account-panel .cat-panel .cat-model-tile span { min-width: 0; overflow-wrap: anywhere; }
+.account-panel .cat-panel .cat-model-tile strong { display: block; font-size: 13px; }
+.account-panel .cat-panel .cat-model-tile small { display: block; margin-top: 4px; color: var(--account-muted); font-size: 12px; }
+.account-panel .cat-panel .cat-model-tile.is-selected { border-color: var(--cat-check); background: var(--cat-soft-2); }
+.account-panel .cat-panel .cat-model-tile:focus-within { outline: 2px solid var(--cat-accent); outline-offset: 2px; }
+.account-panel .cat-panel .cat-model-selection { overflow-wrap: anywhere; }
