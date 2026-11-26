@@ -14,12 +14,24 @@ async function handle(request: Request) {
       if (request.url.length > 8192) throw new Error();
       params = new URL(request.url).searchParams;
     }
-    const single = (name: string) => params.getAll(name).length === 1 ? params.get(name) : null;
+    const single = (name: string) => {
+      const values = params.getAll(name);
+      if (values.length > 1) throw new Error();
+      return values[0] ?? null;
+    };
     const order = single("OrderID"), merchant = single("MerchantID"), terminal = single("TerminalID"), nonce = single("SD");
-    if (!order || !/^[A-Za-z0-9._~-]{1,20}$/.test(order) || !merchant || !/^[A-Za-z0-9]{1,15}$/.test(merchant) || !terminal || !/^[A-Za-z0-9]{8}$/.test(terminal)) throw new Error();
+    if (!order || !/^[A-Za-z0-9._~-]{1,20}$/.test(order) ||
+      (merchant !== null && !/^[A-Za-z0-9]{1,15}$/.test(merchant)) ||
+      (terminal !== null && !/^[A-Za-z0-9]{8}$/.test(terminal)) ||
+      (nonce !== null && !paymentIdValid(nonce)) ||
+      (!nonce && (!merchant || !terminal))) throw new Error();
+    // UPC can return only OrderID, TranCode and SD after server notification.
+    // Both gateway order ID and session nonce are unique, and any supplied terminal context must still match.
     let lookup = getAdminClient(AbortSignal.timeout(8000)).from("payment_attempts").select("id")
-      .eq("gateway_order_id", order).eq("merchant_id", merchant).eq("terminal_id", terminal);
-    if (nonce) { if (!paymentIdValid(nonce)) throw new Error(); lookup = lookup.eq("nonce", nonce); }
+      .eq("gateway_order_id", order);
+    if (nonce) lookup = lookup.eq("nonce", nonce);
+    if (merchant) lookup = lookup.eq("merchant_id", merchant);
+    if (terminal) lookup = lookup.eq("terminal_id", terminal);
     const { data, error } = await lookup.maybeSingle();
     if (!error && data && paymentIdValid(data.id)) destination = `/placanje/${data.id}`;
     // The browser's result is routing metadata only. It cannot set payment/order state,
