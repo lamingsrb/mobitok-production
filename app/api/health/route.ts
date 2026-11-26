@@ -4,7 +4,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const version = {
-  release: "2026-11-26.1",
+  release: "2026-11-26.2",
   commit: process.env.APP_COMMIT_SHA ?? process.env.VERCEL_GIT_COMMIT_SHA ?? null,
 };
 

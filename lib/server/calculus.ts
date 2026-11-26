@@ -16,6 +16,7 @@ export function visibleCalculusExport(row: z.infer<typeof calculusExportRow>, no
       ? "review_required" as const
       : row.state,
     document_id: row.document_id,
+    updated_at: row.updated_at,
   };
 }
 
@@ -28,7 +29,7 @@ const draftSettings = z.object({
   creatorCode: xmlField,
   currencyCode: xmlField,
   codPaymentName: xmlField,
-  products: z.record(z.string(), articleSchema),
+  products: z.record(z.string(), articleSchema).default({}),
   delivery: articleSchema.optional(),
 });
 
@@ -56,7 +57,7 @@ type OrderSnapshot = {
   discount_percent: Money;
   delivery_fee_snapshot: Money;
   payable_total: Money;
-  order_items: { product_id: string; quantity: number; unit_price: Money; line_total: Money }[];
+  order_items: { product_id: string; name?: string; quantity: number; unit_price: Money; line_total: Money }[];
 };
 
 function minorUnits(value: Money) {
@@ -82,7 +83,12 @@ export function prepareCalculusDraft(
   let itemTotal = 0;
   const lines = order.order_items.map((item) => {
     const mapped = Object.hasOwn(settings.products, item.product_id) ? settings.products[item.product_id] : undefined;
-    if (!mapped) throw new HttpError(409, "Za najmanje jedan artikal nedostaje potvrđena šifra u Calculusu.");
+    if (!mapped) {
+      const itemName = item.name?.trim().slice(0, 110);
+      throw new HttpError(409, itemName
+        ? `Nedostaje potvrđena šifra u Calculusu za „${itemName}“.`
+        : "Za najmanje jedan artikal nedostaje potvrđena šifra u Calculusu.");
+    }
     const unitPrice = minorUnits(item.unit_price);
     const lineTotal = minorUnits(item.line_total);
     if (unitPrice === null || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20 ||

@@ -745,7 +745,7 @@
 }
 .account-admin-nav {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
   padding: 6px;
   margin: 0 0 16px;
@@ -788,7 +788,7 @@
 
 .account-admin:has(.cat-panel) > .account-stats { display: none; }
 @media (max-width: 900px) {
-  .account-admin-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .account-admin-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 650px) {
   .account-panel.is-admin { padding-top: 16px; }
@@ -941,17 +941,6 @@
 .account-order-status-form .button {
   font-size: 11px;
   min-height: 49px;
-}
-.account-calculus-export {
-  margin-top: 14px;
-}
-.account-calculus-export .button {
-  min-height: 44px;
-  font-size: 11px;
-}
-.account-calculus-export .account-preview-note {
-  color: #45523a;
-  font-size: 12px;
 }
 @media (max-width: 900px) {
   .account-panel {
@@ -1156,9 +1145,6 @@
     gap: 12px;
   }
   .account-order-status-form > label {
-    width: 100%;
-  }
-  .account-calculus-export .button {
     width: 100%;
   }
   .account-admin-order li {

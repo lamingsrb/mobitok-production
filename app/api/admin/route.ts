@@ -7,6 +7,7 @@ import { PODRAZUMEVANA_PODESAVANJA, vazecaTabelaMarze } from "@/lib/server/prici
 import { procurementError } from "@/lib/server/procurement";
 import { publishSupplierCatalog } from "@/lib/server/catalog-publish";
 import { visibleCalculusExport } from "@/lib/server/calculus";
+import { calculusTransferReady, processCalculusQueue } from "@/lib/server/calculus-transfer";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -47,16 +48,26 @@ export async function GET(request: Request) {
       throw new HttpError(503, "Pregled podataka trenutno nije dostupan.");
     }
     const orderRows = orders.data ?? [];
-    const calculusConfigured = process.env.CALCULUS_DRAFT_EXPORT_ENABLED === "true";
+    const calculusConfigured = calculusTransferReady();
+    const transferSignal = AbortSignal.any([request.signal, AbortSignal.timeout(2500)]);
     // Podesavanja cena vidi samo administrator; marza ne izlazi nigde drugde.
-    const [settingsResult, calculusResult] = await Promise.all([
+    const [settingsResult, calculusResult, queueResult] = await Promise.all([
       admin.from("shop_settings").select("*").eq("id", true).maybeSingle(),
-      calculusConfigured && orderRows.length
+      orderRows.length
         ? Promise.resolve(admin
           .from("calculus_order_exports")
           .select("order_id,state,document_id,updated_at")
           .in("order_id", orderRows.map((order) => order.id))
-          .abortSignal(AbortSignal.any([request.signal, AbortSignal.timeout(2500)])))
+          .abortSignal(transferSignal))
+          .catch(() => ({ data: null, error: true }))
+        : null,
+      orderRows.length
+        ? Promise.resolve(admin
+          .from("calculus_transfer_queue")
+          .select("order_id,state,updated_at,last_error")
+          .in("order_id", orderRows.map((order) => order.id))
+          .in("state", ["pending", "processing", "blocked"])
+          .abortSignal(transferSignal))
           .catch(() => ({ data: null, error: true }))
         : null,
     ]);
@@ -64,9 +75,15 @@ export async function GET(request: Request) {
     if (settingsReadError || !settingsRow)
       throw new HttpError(503, "Podešavanja prodavnice trenutno nisu dostupna.");
     const settings = { ...PODRAZUMEVANA_PODESAVANJA, ...(settingsRow ?? {}), margin_tiers: vazecaTabelaMarze(settingsRow.margin_tiers) };
-    const calculusEnabled = calculusConfigured && !calculusResult?.error;
+    const calculusEnabled = calculusConfigured && !calculusResult?.error && !queueResult?.error;
     const calculusExports = new Map(calculusResult?.data?.map((record) =>
       [record.order_id, visibleCalculusExport(record)] as const));
+    const queuedExports = new Map(queueResult?.data?.map((record) => [record.order_id, {
+      state: record.state === "blocked" ? "blocked" : "queued",
+      updated_at: record.updated_at,
+      issue: record.last_error,
+      document_id: null,
+    }] as const));
     // Supplier statistics belong to the procurement view, which loads them separately.
     // The legacy overview must not scan supplier_products before another admin tool opens.
 
@@ -77,10 +94,10 @@ export async function GET(request: Request) {
           orders: orderCount.count ?? 0,
           pendingB2b: pendingCount.count ?? 0,
         },
-        orders: calculusEnabled ? orderRows.map((order) => ({
+        orders: orderRows.map((order) => ({
           ...order,
-          calculus_export: calculusExports.get(order.id) ?? null,
-        })) : orderRows,
+          calculus_export: calculusExports.get(order.id) ?? queuedExports.get(order.id) ?? null,
+        })),
         calculusEnabled,
         applications: applications.data ?? [],
         settings,
@@ -200,6 +217,12 @@ export async function PATCH(request: Request) {
     if (error?.message.includes("NOT_FOUND"))
       throw new HttpError(404, "Traženi zapis ne postoji.");
     if (error) procurementError(error.message);
+    if (body.action === "update_order" && body.status === "reviewing" &&
+      typeof data?.from === "string" && data.from !== "reviewing" && calculusTransferReady()) {
+      after(() => processCalculusQueue(1).catch(() => {
+        console.error("Pokretanje Calculus reda nije uspelo. Red ostaje sačuvan.");
+      }));
+    }
     // Mejl o otkazivanju ide samo kada porudzbina tek sada postaje otkazana. Prethodni
     // status ('from') funkcija cita pod zakljucavanjem reda (202610180004), pa ni ponovljen
     // ni istovremen zahtev ne salje drugi mejl (pregled 18.10.2026). Bez 'from' mejla nema.

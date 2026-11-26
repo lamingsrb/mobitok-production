@@ -22,6 +22,7 @@ import {
   CreditCard,
   Eye,
   EyeOff,
+  FileCheck2,
   LoaderCircle,
   LockKeyhole,
   LogOut,
@@ -38,6 +39,7 @@ import { getClient } from "@/lib/supabase-browser";
 import { requestWithDeadline } from "@/lib/request-deadline";
 import { configuredSupabaseUrl } from "@/lib/supabase-config";
 import type { PaymentMethod, PaymentStatus } from "@/lib/payment-types";
+import { calculusOrderCsv, filterCalculusOrders } from "@/lib/calculus-order-report";
 import { ispravnaTabelaMarze, prikazIznosa, type MarginTier } from "@/lib/pricing";
 import { useT } from "./store-context";
 import ProcurementPanel from "./procurement-panel";
@@ -46,12 +48,15 @@ import CatalogUpdatesPanel from "./catalog-updates-panel";
 import MarginTiersEditor from "./margin-tiers-editor";
 import AdminPaymentSettings from "./admin-payment-settings";
 import AdminDeliverySettings, { type DeliverySettings } from "./admin-delivery-settings";
+import { AdminCalculusSettings, type CalculusTransferSettings } from "./admin-calculus-settings";
+import { CalculusOrderTools, OrderCalculusExport, type CalculusOrderFilter, type CalculusOrderTransfer } from "./order-calculus-export";
 import "./account-panel.css";
 
 type Mode = "account" | "b2b" | "admin";
 const adminSections = [
   { id: "procurement", param: "nabavka", title: "Nabavka i dobavljači", icon: Truck },
   { id: "orders", param: "porudzbine", title: "Porudžbine", icon: Package },
+  { id: "calculus", param: "calculus", title: "Calculus", icon: FileCheck2 },
   { id: "checkout", param: "placanje-dostava", title: "Plaćanje i dostava", icon: CreditCard },
   { id: "catalog", param: "katalog", title: "Katalog", icon: Library },
   { id: "settings", param: "cene", title: "Cene i marža", icon: Percent },
@@ -60,10 +65,6 @@ const adminSections = [
 type AdminSection = typeof adminSections[number];
 
 type AuthView = "login" | "register" | "forgot" | "recover";
-type CalculusExport = {
-  state: "sending" | "review_required" | "exported";
-  document_id: string | null;
-};
 type Order = {
   id: string;
   reference: string;
@@ -78,7 +79,7 @@ type Order = {
   demo: boolean;
   created_at: string;
   customer?: { fullName?: string; email?: string };
-  calculus_export?: CalculusExport | null;
+  calculus_export?: CalculusOrderTransfer | null;
   order_items?: {
     product_id: string;
     name: string;
@@ -135,6 +136,7 @@ type AdminData = {
   demo: boolean;
   calculusEnabled?: boolean;
 };
+type CalculusSetup = { enabled: boolean; settings: CalculusTransferSettings };
 
 export { getClient } from "@/lib/supabase-browser";
 function authMessage(message: string) {
@@ -216,47 +218,6 @@ function OrderAmount({ order }: { order: Order }) {
   );
 }
 
-function OrderCalculusExport({ order, savingId, error, send }: {
-  order: Order;
-  savingId: string | null;
-  error?: string;
-  send: () => void;
-}) {
-  const exported = order.calculus_export;
-  const eligible = !order.demo && order.status === "reviewing" && order.currency === "RSD" &&
-    order.payment_method === "cod" && order.payment_status === "unpaid";
-  const sending = savingId === `calculus-${order.id}`;
-  if (!exported && !eligible && !error) return null;
-
-  return (
-    <div className="account-calculus-export">
-      {exported && (
-        <div className="account-preview-note" role="status">
-          {exported.state === "exported"
-            ? "Nacrt je sačuvan u Calculusu. Proverite dokument pre fiskalizacije u kasi."
-            : exported.state === "sending"
-              ? "Slanje nacrta je u toku. Osvežite pregled za noviji status."
-              : "Proverite nacrt u Calculusu po referenci porudžbine pre bilo kakvog novog unosa."}
-          {exported.document_id && <> ID dokumenta {exported.document_id}.</>}
-        </div>
-      )}
-      {eligible && !exported && (
-        <button
-          className="button button-dark"
-          type="button"
-          disabled={!!savingId}
-          aria-busy={sending}
-          onClick={send}
-        >
-          {sending && <LoaderCircle size={16} className="account-spin" aria-hidden="true" />}
-          {sending ? "Slanje nacrta…" : "Pošalji nacrt u Calculus"}
-        </button>
-      )}
-      {error && !exported && <Notice error>{error}</Notice>}
-    </div>
-  );
-}
-
 function Notice({
   children,
   error = false,
@@ -303,9 +264,13 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
   const [actionMessage, setActionMessage] = useState("");
   const [actionError, setActionError] = useState("");
   const [calculusError, setCalculusError] = useState<{ orderId: string; message: string } | null>(null);
+  const [calculusSetup, setCalculusSetup] = useState<CalculusSetup | null>(null);
+  const [calculusSetupError, setCalculusSetupError] = useState("");
+  const [calculusFilter, setCalculusFilter] = useState<CalculusOrderFilter>("all");
   const [settingsStatus, setSettingsStatus] = useState<{ error: boolean; text: string } | null>(null);
   const activeUserId = useRef<string | null>(null);
   const requestId = useRef(0);
+  const calculusSettingsRevision = useRef(0);
   const client = getClient();
 
   useEffect(() => {
@@ -382,6 +347,10 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
         setActionMessage("");
         setActionError("");
         setCalculusError(null);
+        calculusSettingsRevision.current += 1;
+        setCalculusSetup(null);
+        setCalculusSetupError("");
+        setCalculusFilter("all");
       }
       setSession(currentSession);
     }
@@ -493,6 +462,49 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
   useEffect(() => {
     void loadData();
   }, [loadData]);
+
+  const showCalculusSettings = mode === "admin" && adminTab === "calculus" && Boolean(admin);
+  const loadCalculusSettings = useCallback(async (signal?: AbortSignal) => {
+    const actor = activeUserId.current;
+    const revision = ++calculusSettingsRevision.current;
+    setCalculusSetupError("");
+    try {
+      const setup = await api<CalculusSetup>("/api/admin/calculus", { signal });
+      if (!signal?.aborted && actor === activeUserId.current && calculusSettingsRevision.current === revision)
+        setCalculusSetup(setup);
+    } catch (error) {
+      if (!signal?.aborted && actor === activeUserId.current && calculusSettingsRevision.current === revision)
+        setCalculusSetupError(error instanceof Error ? error.message : "Podešavanja prenosa trenutno nisu dostupna.");
+    }
+  }, [api]);
+  useEffect(() => {
+    if (!showCalculusSettings) return;
+    const controller = new AbortController();
+    void loadCalculusSettings(controller.signal);
+    return () => controller.abort();
+  }, [loadCalculusSettings, showCalculusSettings]);
+
+  const pendingCalculusOrders = mode === "admin" && adminTab === "orders" && Boolean(admin?.calculusEnabled &&
+    admin.orders.some((order) => ["queued", "sending"].includes(order.calculus_export?.state ?? "")));
+  useEffect(() => {
+    if (!pendingCalculusOrders) return;
+    const controller = new AbortController();
+    let poll = 0;
+    async function refreshTransfers() {
+      if (document.hidden) return;
+      const sequence = ++poll;
+      const revision = requestId.current;
+      const result = await api<AdminData>("/api/admin", { signal: controller.signal }).catch(() => null);
+      if (result && !controller.signal.aborted && sequence === poll && requestId.current === revision) setAdmin(result);
+    }
+    const first = window.setTimeout(() => void refreshTransfers(), 6500);
+    const second = window.setTimeout(() => void refreshTransfers(), 22000);
+    return () => {
+      controller.abort();
+      window.clearTimeout(first);
+      window.clearTimeout(second);
+    };
+  }, [api, pendingCalculusOrders]);
 
   async function submitAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -765,10 +777,10 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
     setSavingId(savingKey);
     setCalculusError(null);
     try {
-      const result = await api<CalculusExport>("/api/admin/calculus", {
+      const result = await api<CalculusOrderTransfer>("/api/admin/calculus", {
         method: "POST",
         body: JSON.stringify({ orderId }),
-      }, 75_000);
+      }, 100_000);
       if (!["sending", "review_required", "exported"].includes(result.state))
         throw new ApiFailure("Ishod slanja nije potvrđen. Proverite Calculus po referenci porudžbine.", 502);
       if (activeUserId.current !== actorId) return;
@@ -790,6 +802,46 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
     } finally {
       setSavingId((current) => current === savingKey ? null : current);
     }
+  }
+
+  async function saveCalculusSettings(automaticEnabled: boolean) {
+    const actor = activeUserId.current;
+    if (!actor || savingId) return;
+    calculusSettingsRevision.current += 1;
+    setSavingId("calculus-settings");
+    setCalculusSetupError("");
+    try {
+      const result = await api<CalculusSetup>("/api/admin/calculus", {
+        method: "PUT",
+        body: JSON.stringify({ automaticEnabled }),
+      });
+      if (actor === activeUserId.current) {
+        calculusSettingsRevision.current += 1;
+        setCalculusSetupError("");
+        setCalculusSetup(result);
+      }
+    } catch (error) {
+      if (actor === activeUserId.current)
+        setCalculusSetupError(error instanceof Error ? error.message : "Režim prenosa nije sačuvan.");
+    } finally {
+      setSavingId((current) => current === "calculus-settings" ? null : current);
+    }
+  }
+
+  const visibleAdminOrders = filterCalculusOrders(admin?.orders ?? [], calculusFilter);
+  const downloadableOrders = visibleAdminOrders.filter((order) => !order.demo).length;
+  function downloadCalculusOrders() {
+    if (!downloadableOrders) return;
+    const csv = new Blob([calculusOrderCsv(visibleAdminOrders)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(csv);
+    const link = document.createElement("a");
+    const date = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Belgrade" }).format();
+    link.href = url;
+    link.download = `MOBITOK-Calculus-${date}.csv`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   const displayName =
@@ -1517,10 +1569,13 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                   </section>
                   <div className="account-admin-top">
                     {admin.demo && <Notice>Proveri cene dobavljača, uslove dostave i načine plaćanja pre otvaranja prodaje.</Notice>}
-                    <button
+                    {adminTab !== "orders" && <button
                       type="button"
                       className="button"
-                      onClick={() => void loadData()}
+                      onClick={() => {
+                        void loadData();
+                        if (adminTab === "calculus") void loadCalculusSettings();
+                      }}
                       disabled={dataBusy}
                     >
                       <RefreshCw
@@ -1528,7 +1583,7 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                         className={dataBusy ? "account-spin" : ""}
                       />
                       Osveži
-                    </button>
+                    </button>}
                   </div>
                   <div className="account-stats">
                     {[
@@ -1545,6 +1600,20 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                   {(adminTab === "procurement" || adminTab === "catalog") && <CatalogUpdatesPanel api={api} />}
                   {adminTab === "procurement" && <ProcurementPanel api={api} />}
                   {adminTab === "catalog" && <CatalogAdminPanel api={api} />}
+                  {adminTab === "calculus" && (
+                    <AdminCalculusSettings
+                      enabled={calculusSetup?.enabled ?? false}
+                      settings={calculusSetup?.settings ?? null}
+                      saving={savingId === "calculus-settings"}
+                      error={calculusSetupError}
+                      onSave={(automatic) => void saveCalculusSettings(automatic)}
+                      onOpenOrders={() => {
+                        const section = adminSections.find((option) => option.id === "orders");
+                        if (section) openAdminTab(section);
+                      }}
+                      mappingApi={api}
+                    />
+                  )}
                   {adminTab === "settings" && (
                   <div className="panel account-admin-section">
                     <div className="account-section-title">
@@ -1749,10 +1818,20 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                       <h2>Porudžbine</h2>
                       <Package size={23} />
                     </div>
-                    {!admin.orders.length && (
-                      <p className="muted">Još nema porudžbina.</p>
+                    <CalculusOrderTools
+                      filter={calculusFilter}
+                      onFilter={setCalculusFilter}
+                      shown={visibleAdminOrders.length}
+                      total={admin.orders.length}
+                      downloadable={downloadableOrders}
+                      onDownload={downloadCalculusOrders}
+                      onRefresh={() => void loadData()}
+                      refreshing={dataBusy}
+                    />
+                    {!visibleAdminOrders.length && (
+                      <p className="muted">{admin.orders.length ? "Nema porudžbina sa ovim statusom prenosa." : "Još nema porudžbina."}</p>
                     )}
-                    {admin.orders.map((order) => (
+                    {visibleAdminOrders.map((order) => (
                       <div className="account-admin-order" key={order.id}>
                         <div className="account-admin-order-head">
                           <div>
@@ -1822,9 +1901,10 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                             Sačuvaj status
                           </button>
                         </form>
-                        {admin.calculusEnabled && (
+                        {(admin.calculusEnabled || order.calculus_export) && (
                           <OrderCalculusExport
                             order={order}
+                            enabled={Boolean(admin.calculusEnabled)}
                             savingId={savingId}
                             error={calculusError?.orderId === order.id ? calculusError.message : undefined}
                             send={() => void sendCalculusDraft(order.id)}

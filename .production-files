@@ -1,4 +1,5 @@
 app/[...slug]/page.tsx
+app/api/admin/calculus/mappings/route.ts
 app/api/admin/calculus/route.ts
 app/api/admin/catalog-updates/route.ts
 app/api/admin/catalog/route.ts
@@ -14,6 +15,7 @@ app/api/catalog/image/[supplier]/[sku]/route.ts
 app/api/catalog/items/route.ts
 app/api/catalog/meta/route.ts
 app/api/catalog/route.ts
+app/api/cron/calculus/route.ts
 app/api/cron/payments/route.ts
 app/api/cron/storage-retention/route.ts
 app/api/cron/supplier-sync/route.ts
@@ -42,6 +44,8 @@ app/robots.ts
 app/sitemap.ts
 components/account-panel.css
 components/account-panel.tsx
+components/admin-calculus-settings.css
+components/admin-calculus-settings.tsx
 components/admin-delivery-settings.css
 components/admin-delivery-settings.tsx
 components/admin-payment-settings.css
@@ -55,6 +59,8 @@ components/cinema-scene.tsx
 components/cinematic-home.tsx
 components/margin-tiers-editor.tsx
 components/model-picker.tsx
+components/order-calculus-export.css
+components/order-calculus-export.tsx
 components/payment-method-picker.css
 components/payment-method-picker.tsx
 components/payment-return-panel.css
@@ -68,6 +74,7 @@ components/store-context.tsx
 components/storefront.tsx
 components/supplier-source-editor.css
 components/supplier-source-editor.tsx
+lib/calculus-order-report.ts
 lib/catalog-admin-types.ts
 lib/catalog-cache.ts
 lib/catalog-card-image.ts
@@ -90,6 +97,7 @@ lib/public-specs.ts
 lib/request-deadline.ts
 lib/server/bank-transfer-qr.ts
 lib/server/btm-export-legacy.ts
+lib/server/calculus-transfer.ts
 lib/server/calculus.ts
 lib/server/catalog-admin.ts
 lib/server/catalog-card-image.ts

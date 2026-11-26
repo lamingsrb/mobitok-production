@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/supplier-sync?nightly=1",
       "schedule": "15 2 * * *"
+    },
+    {
+      "path": "/api/cron/calculus",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
