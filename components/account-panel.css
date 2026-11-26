@@ -942,6 +942,17 @@
   font-size: 11px;
   min-height: 49px;
 }
+.account-calculus-export {
+  margin-top: 14px;
+}
+.account-calculus-export .button {
+  min-height: 44px;
+  font-size: 11px;
+}
+.account-calculus-export .account-preview-note {
+  color: #45523a;
+  font-size: 12px;
+}
 @media (max-width: 900px) {
   .account-panel {
     padding: 45px 24px 75px;
@@ -1145,6 +1156,9 @@
     gap: 12px;
   }
   .account-order-status-form > label {
+    width: 100%;
+  }
+  .account-calculus-export .button {
     width: 100%;
   }
   .account-admin-order li {

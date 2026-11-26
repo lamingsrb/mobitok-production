@@ -60,6 +60,10 @@ const adminSections = [
 type AdminSection = typeof adminSections[number];
 
 type AuthView = "login" | "register" | "forgot" | "recover";
+type CalculusExport = {
+  state: "sending" | "review_required" | "exported";
+  document_id: string | null;
+};
 type Order = {
   id: string;
   reference: string;
@@ -74,6 +78,7 @@ type Order = {
   demo: boolean;
   created_at: string;
   customer?: { fullName?: string; email?: string };
+  calculus_export?: CalculusExport | null;
   order_items?: {
     product_id: string;
     name: string;
@@ -128,6 +133,7 @@ type AdminData = {
   applications: Application[];
   settings: ShopSettings;
   demo: boolean;
+  calculusEnabled?: boolean;
 };
 
 export { getClient } from "@/lib/supabase-browser";
@@ -210,6 +216,47 @@ function OrderAmount({ order }: { order: Order }) {
   );
 }
 
+function OrderCalculusExport({ order, savingId, error, send }: {
+  order: Order;
+  savingId: string | null;
+  error?: string;
+  send: () => void;
+}) {
+  const exported = order.calculus_export;
+  const eligible = !order.demo && order.status === "reviewing" && order.currency === "RSD" &&
+    order.payment_method === "cod" && order.payment_status === "unpaid";
+  const sending = savingId === `calculus-${order.id}`;
+  if (!exported && !eligible && !error) return null;
+
+  return (
+    <div className="account-calculus-export">
+      {exported && (
+        <div className="account-preview-note" role="status">
+          {exported.state === "exported"
+            ? "Nacrt je sačuvan u Calculusu. Proverite dokument pre fiskalizacije u kasi."
+            : exported.state === "sending"
+              ? "Slanje nacrta je u toku. Osvežite pregled za noviji status."
+              : "Proverite nacrt u Calculusu po referenci porudžbine pre bilo kakvog novog unosa."}
+          {exported.document_id && <> ID dokumenta {exported.document_id}.</>}
+        </div>
+      )}
+      {eligible && !exported && (
+        <button
+          className="button button-dark"
+          type="button"
+          disabled={!!savingId}
+          aria-busy={sending}
+          onClick={send}
+        >
+          {sending && <LoaderCircle size={16} className="account-spin" aria-hidden="true" />}
+          {sending ? "Slanje nacrta…" : "Pošalji nacrt u Calculus"}
+        </button>
+      )}
+      {error && !exported && <Notice error>{error}</Notice>}
+    </div>
+  );
+}
+
 function Notice({
   children,
   error = false,
@@ -255,6 +302,7 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
   const [savingId, setSavingId] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState("");
   const [actionError, setActionError] = useState("");
+  const [calculusError, setCalculusError] = useState<{ orderId: string; message: string } | null>(null);
   const [settingsStatus, setSettingsStatus] = useState<{ error: boolean; text: string } | null>(null);
   const activeUserId = useRef<string | null>(null);
   const requestId = useRef(0);
@@ -333,6 +381,7 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
         setDataBusy(false);
         setActionMessage("");
         setActionError("");
+        setCalculusError(null);
       }
       setSession(currentSession);
     }
@@ -677,6 +726,7 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
     action: "review_b2b" | "update_order",
   ) {
     event.preventDefault();
+    if (savingId) return;
     const nativeEvent = event.nativeEvent as SubmitEvent;
     const submitter = nativeEvent.submitter as HTMLButtonElement | null;
     const data = new FormData(event.currentTarget);
@@ -705,6 +755,40 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
       );
     } finally {
       setSavingId(null);
+    }
+  }
+
+  async function sendCalculusDraft(orderId: string) {
+    const actorId = session?.user.id;
+    if (!actorId || savingId) return;
+    const savingKey = `calculus-${orderId}`;
+    setSavingId(savingKey);
+    setCalculusError(null);
+    try {
+      const result = await api<CalculusExport>("/api/admin/calculus", {
+        method: "POST",
+        body: JSON.stringify({ orderId }),
+      }, 75_000);
+      if (!["sending", "review_required", "exported"].includes(result.state))
+        throw new ApiFailure("Ishod slanja nije potvrđen. Proverite Calculus po referenci porudžbine.", 502);
+      if (activeUserId.current !== actorId) return;
+      requestId.current += 1;
+      setDataBusy(false);
+      setAdmin((previous) => previous ? {
+        ...previous,
+        orders: previous.orders.map((order) => order.id === orderId ? { ...order, calculus_export: result } : order),
+      } : previous);
+    } catch (error) {
+      if (activeUserId.current !== actorId) return;
+      setCalculusError({
+        orderId,
+        message: error instanceof ApiFailure && error.status > 0 && error.status !== 500 && error.status !== 504
+          ? error.message
+          : "Ishod slanja nije potvrđen. Proverite Calculus po referenci porudžbine.",
+      });
+      await loadData();
+    } finally {
+      setSavingId((current) => current === savingKey ? null : current);
     }
   }
 
@@ -1738,6 +1822,14 @@ export default function AccountPanel({ mode = "account" }: { mode?: Mode }) {
                             Sačuvaj status
                           </button>
                         </form>
+                        {admin.calculusEnabled && (
+                          <OrderCalculusExport
+                            order={order}
+                            savingId={savingId}
+                            error={calculusError?.orderId === order.id ? calculusError.message : undefined}
+                            send={() => void sendCalculusDraft(order.id)}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

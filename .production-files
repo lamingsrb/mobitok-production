@@ -1,4 +1,5 @@
 app/[...slug]/page.tsx
+app/api/admin/calculus/route.ts
 app/api/admin/catalog-updates/route.ts
 app/api/admin/catalog/route.ts
 app/api/admin/payments/reconcile/route.ts
@@ -89,6 +90,7 @@ lib/public-specs.ts
 lib/request-deadline.ts
 lib/server/bank-transfer-qr.ts
 lib/server/btm-export-legacy.ts
+lib/server/calculus.ts
 lib/server/catalog-admin.ts
 lib/server/catalog-card-image.ts
 lib/server/catalog-image-source.ts

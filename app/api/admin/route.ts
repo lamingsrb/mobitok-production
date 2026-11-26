@@ -6,6 +6,7 @@ import { adminActionSchema } from "@/lib/server/validation";
 import { PODRAZUMEVANA_PODESAVANJA, vazecaTabelaMarze } from "@/lib/server/pricing-defaults";
 import { procurementError } from "@/lib/server/procurement";
 import { publishSupplierCatalog } from "@/lib/server/catalog-publish";
+import { visibleCalculusExport } from "@/lib/server/calculus";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -45,15 +46,27 @@ export async function GET(request: Request) {
     ) {
       throw new HttpError(503, "Pregled podataka trenutno nije dostupan.");
     }
+    const orderRows = orders.data ?? [];
+    const calculusConfigured = process.env.CALCULUS_DRAFT_EXPORT_ENABLED === "true";
     // Podesavanja cena vidi samo administrator; marza ne izlazi nigde drugde.
-    const { data: settingsRow, error: settingsReadError } = await admin
-      .from("shop_settings")
-      .select("*")
-      .eq("id", true)
-      .maybeSingle();
+    const [settingsResult, calculusResult] = await Promise.all([
+      admin.from("shop_settings").select("*").eq("id", true).maybeSingle(),
+      calculusConfigured && orderRows.length
+        ? Promise.resolve(admin
+          .from("calculus_order_exports")
+          .select("order_id,state,document_id,updated_at")
+          .in("order_id", orderRows.map((order) => order.id))
+          .abortSignal(AbortSignal.any([request.signal, AbortSignal.timeout(2500)])))
+          .catch(() => ({ data: null, error: true }))
+        : null,
+    ]);
+    const { data: settingsRow, error: settingsReadError } = settingsResult;
     if (settingsReadError || !settingsRow)
       throw new HttpError(503, "Podešavanja prodavnice trenutno nisu dostupna.");
     const settings = { ...PODRAZUMEVANA_PODESAVANJA, ...(settingsRow ?? {}), margin_tiers: vazecaTabelaMarze(settingsRow.margin_tiers) };
+    const calculusEnabled = calculusConfigured && !calculusResult?.error;
+    const calculusExports = new Map(calculusResult?.data?.map((record) =>
+      [record.order_id, visibleCalculusExport(record)] as const));
     // Supplier statistics belong to the procurement view, which loads them separately.
     // The legacy overview must not scan supplier_products before another admin tool opens.
 
@@ -64,11 +77,15 @@ export async function GET(request: Request) {
           orders: orderCount.count ?? 0,
           pendingB2b: pendingCount.count ?? 0,
         },
-        orders: orders.data ?? [],
+        orders: calculusEnabled ? orderRows.map((order) => ({
+          ...order,
+          calculus_export: calculusExports.get(order.id) ?? null,
+        })) : orderRows,
+        calculusEnabled,
         applications: applications.data ?? [],
         settings,
         supplier: null,
-        demo: (orders.data ?? []).some((order) => order.demo),
+        demo: orderRows.some((order) => order.demo),
       },
       { headers: { "Cache-Control": "no-store" } },
     );
